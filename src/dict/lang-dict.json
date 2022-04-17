@@ -1,0 +1,30 @@
+[
+  {
+    "baseLang": "auto",
+    "desc": "自动"
+  },
+  {
+    "baseLang": "en",
+    "desc": "英文"
+  },
+  {
+    "baseLang": "en_US",
+    "desc": "英文（美国）"
+  },
+  {
+    "baseLang": "zh_CN",
+    "desc": "中文"
+  },
+  {
+    "baseLang": "zh_HK",
+    "desc": "中文（香港）"
+  },
+  {
+    "baseLang": "zh_TW",
+    "desc": "中文（台湾/繁体）"
+  },
+  {
+    "baseLang": "ja",
+    "desc": "日文"
+  }
+]
