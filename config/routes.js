@@ -55,6 +55,12 @@ export default [
     component: './OnlineAlign',
   },
   {
+    name: 'learn.learn-demo',
+    icon: 'table',
+    path: '/learn',
+    component: './LearnDemo',
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },

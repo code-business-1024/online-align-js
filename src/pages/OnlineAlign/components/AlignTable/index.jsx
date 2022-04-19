@@ -2,11 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import ProTable from '@ant-design/pro-table';
 import FileUpload from '../FileUpload/index';
 import './index.less';
+import { formatResponseObjArray, mergeObjArray } from '../../sentence-util';
+import defaultSentencesData from '../../sentence-data.json';
 
 const columns = [
   {
-    title: '序号',
-    width: 50,
+    title: 'No.*',
+    width: '4%',
     dataIndex: 'key',
     render: (_) => <a>{_}</a>,
   },
@@ -24,23 +26,8 @@ const columns = [
   },
 ];
 
-const defaultSentences = [
-  {
-    value1: 'An elderly couple raised their 4 children on a frugal basis. ',
-    value2: 'An elderly couple raised their 4 children on a frugal basis. ',
-    key: 1,
-  },
-  {
-    value1:
-      'Time flies, they have been married for 50 years, and the children with excellent income are secretly discussing what kind of golden wedding gift to give their parents.',
-    value2:
-      'Time flies, they have been married for 50 years, and the children with excellent income are secretly discussing what kind of golden wedding gift to give their parents.',
-    key: 2,
-  },
-];
-
 const AlignTable = () => {
-  const [sentences, setSentences] = useState(defaultSentences);
+  const [sentences, setSentences] = useState([]);
 
   return (
     <>
@@ -56,40 +43,20 @@ const AlignTable = () => {
               className="left-upload"
               key="1"
               doUploadSuccess={(data) => {
-                let newData = [];
-                let tempObj = {};
-                data.map((item) => {
-                  tempObj = item;
-                  tempObj['value1'] = item['value'];
-                  tempObj['value2'] = '';
-                  delete tempObj['value'];
-                  newData.push(tempObj);
-                });
-                // console.log(newData);
-                setSentences(newData);
+                let formatData = formatResponseObjArray('value1', data);
+                let arr2 = sentences;
+                let finalArray = mergeObjArray(formatData, arr2);
+                setSentences(finalArray);
               }}
             />
             <FileUpload
               className="right-upload"
               key="2"
               doUploadSuccess={(data) => {
-                let oldData = sentences;
-                let newData = [];
-                let finalData = [];
-                let tempObj = {};
-                data.map((item) => {
-                  tempObj = item;
-                  tempObj['value2'] = item['value'];
-                  delete tempObj['value'];
-                  newData.push(tempObj);
-                });
-                oldData.forEach((item1) => {
-                  newData.forEach(
-                    (item2) => item1.key === item2.key && finalData.push({ ...item1, ...item2 }),
-                  );
-                });
-                // console.log(finalData);
-                setSentences(finalData);
+                let formatData = formatResponseObjArray('value2', data);
+                let arr1 = sentences;
+                let finalArray = mergeObjArray(arr1, formatData);
+                setSentences(finalArray);
               }}
             />
           </div>,

@@ -64,7 +64,7 @@ const FileInput = ({ className, doUploadSuccess = (f) => f }) => {
               }}
               maxCount={1}
             >
-              <Button icon={<UploadOutlined />}>上传文件</Button>
+              <Button icon={<UploadOutlined />}>上传</Button>
             </Upload>
           </div>
         </div>
