@@ -1,38 +1,68 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
+import { useSentences } from '../../sentence-hooks';
+import { useInput } from '../../custom-hooks';
 import ProTable from '@ant-design/pro-table';
+import { Input } from 'antd';
+import ToolBar from '../ToolBar/index';
 import FileUpload from '../FileUpload/index';
 import './index.less';
 import { formatResponseObjArray, mergeObjArray } from '../../sentence-util';
 import defaultSentencesData from '../../sentence-data.json';
-
-const columns = [
-  {
-    title: 'No.*',
-    width: '4%',
-    dataIndex: 'key',
-    render: (_) => <a>{_}</a>,
-  },
-  {
-    title: '内容',
-    width: '48%',
-    dataIndex: 'value1',
-    render: (_) => <a>{_}</a>,
-  },
-  {
-    title: '内容',
-    width: '48%',
-    dataIndex: 'value2',
-    render: (_) => <a>{_}</a>,
-  },
-];
+import Item from 'antd/lib/list/Item';
 
 const AlignTable = () => {
-  const [sentences, setSentences] = useState([]);
+  const { currentInputValue, setCurrentInputValue } = useState('');
+  const { value, setValue } = useState('');
+
+  const { sentences, setPartValue, setSentenceValue } = useSentences();
+
+  useEffect(() => {
+    console.log('useE');
+  }, [, currentInputValue]);
 
   return (
     <>
+      {/* <h1>在线对齐</h1> */}
       <ProTable
-        columns={columns}
+        columns={[
+          {
+            title: 'No.*',
+            width: '2%',
+            dataIndex: 'key',
+            render: (_) => <a>{_}</a>,
+          },
+          {
+            title: '内容1',
+            width: '43%',
+            dataIndex: 'value1',
+            render: (_, record, index, action) => (
+              <Input.TextArea
+                value={currentInputValue ? currentInputValue : record.value1}
+                autoSize={{ minRows: 1 }}
+                bordered={true}
+                onFocus={(e) => {
+                  console.log(_, record, index, action);
+                  console.log(record.value1);
+                  // setCurrentInputValue(record.value1);
+                  console.log(currentInputValue);
+                }}
+                onChange={(e) => {
+                  console.log(e);
+                  setCurrentInputValue(e.target.value);
+                }}
+                onBlur={(e) => setSentenceValue('value1', e.target.value)}
+              />
+            ),
+          },
+          {
+            title: '内容2',
+            width: '49%',
+            dataIndex: 'value2',
+            render: (_, record) => (
+              <Input.TextArea value={record.value2} autoSize={{ minRows: 1 }} bordered={true} />
+            ),
+          },
+        ]}
         dataSource={sentences}
         rowKey="key"
         search={false}
@@ -41,22 +71,16 @@ const AlignTable = () => {
           <div className="upload-group" key="1">
             <FileUpload
               className="left-upload"
-              key="1"
+              key="value1"
               doUploadSuccess={(data) => {
-                let formatData = formatResponseObjArray('value1', data);
-                let arr2 = sentences;
-                let finalArray = mergeObjArray(formatData, arr2);
-                setSentences(finalArray);
+                setPartValue('value1', data);
               }}
             />
             <FileUpload
               className="right-upload"
-              key="2"
+              key="value2"
               doUploadSuccess={(data) => {
-                let formatData = formatResponseObjArray('value2', data);
-                let arr1 = sentences;
-                let finalArray = mergeObjArray(arr1, formatData);
-                setSentences(finalArray);
+                setPartValue('value2', data);
               }}
             />
           </div>,

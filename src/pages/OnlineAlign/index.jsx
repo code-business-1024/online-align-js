@@ -1,16 +1,18 @@
 import React from 'react';
-import ToolBar from './components/ToolBar/index';
 import AlignTable from './components/AlignTable';
+import ToolBar from './components/ToolBar/index';
+import { SentenceProvider } from './sentence-hooks';
 
 import './index.less';
 
 const OnlineAlign = () => {
   return (
     <>
-      {/* <h1>在线对齐</h1> */}
-      <ToolBar />
       <div className="table-container">
-        <AlignTable />
+        <SentenceProvider>
+          <ToolBar />
+          <AlignTable />
+        </SentenceProvider>
         {/* <AlignTable id="right-at" /> */}
       </div>
     </>

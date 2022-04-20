@@ -1,89 +1,139 @@
 import React, { useState } from 'react';
-import { DragSortTable } from '@ant-design/pro-table';
-import { MenuOutlined } from '@ant-design/icons';
-import { message } from 'antd';
-// import value1Data from './value1Data.json';
-// import value2Data from './value2Data.json';
+import { EditableProTable } from '@ant-design/pro-table';
+import ProCard from '@ant-design/pro-card';
+import { Button } from 'antd';
+import { ProFormField } from '@ant-design/pro-form';
 
-import './index.less';
+const defaultData = new Array(20).fill(1).map((_, index) => {
+  return {
+    id: (Date.now() + index).toString(),
+    title: `活动名称${index}`,
+    decs: '这个活动真好玩',
+    state: 'open',
+    created_at: '2020-05-26T09:42:56Z',
+  };
+});
 
-const defaultObjArray = [];
+export default () => {
+  const [editableKeys, setEditableRowKeys] = useState(() => defaultData.map((item) => item.id));
+  const [dataSource, setDataSource] = useState(() => defaultData);
 
-const data = [
-  {
-    key: 'key1',
-    value: 'John Brown',
-    index: 0,
-  },
-  {
-    key: 'key2',
-    value: 'Jim Green',
-    index: 1,
-  },
-  {
-    key: 'key3',
-    value: 'Joe Black',
-    index: 2,
-  },
-];
-
-const ObjArray = () => {
-  const [objArray, setObjArray] = useState(defaultObjArray);
-
-  const columns2 = [
+  const columns = [
     {
-      title: '排序',
-      dataIndex: 'key',
+      title: '活动名称',
+      dataIndex: 'title',
+      width: '30%',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            whitespace: true,
+            message: '此项是必填项',
+          },
+          {
+            message: '必须包含数字',
+            pattern: /[0-9]/,
+          },
+          {
+            max: 16,
+            whitespace: true,
+            message: '最长为 16 位',
+          },
+          {
+            min: 6,
+            whitespace: true,
+            message: '最小为 6 位',
+          },
+        ],
+      },
     },
     {
-      title: '姓名',
-      dataIndex: 'value',
+      title: '状态',
+      key: 'state',
+      dataIndex: 'state',
+      valueType: 'select',
+      valueEnum: {
+        all: { text: '全部', status: 'Default' },
+        open: {
+          text: '未解决',
+          status: 'Error',
+        },
+        closed: {
+          text: '已解决',
+          status: 'Success',
+        },
+      },
+    },
+    {
+      title: '描述',
+      dataIndex: 'decs',
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      width: 250,
+      render: () => {
+        return null;
+      },
     },
   ];
 
-  const [dataSource2, setDatasource2] = useState(data);
-
-  const handleDragSortEnd2 = (newDataSource) => {
-    console.log('排序后的数据', newDataSource);
-    setDatasource2(newDataSource);
-    message.success('修改列表排序成功');
-  };
-
-  const dragHandleRender = (rowData, idx) => (
-    <>
-      <MenuOutlined style={{ cursor: 'grab', color: 'gold' }} />
-      &nbsp;{idx + 1} - {rowData.name}
-    </>
-  );
-
   return (
     <>
-      <div className="table-container">
-        <DragSortTable
-          headerTitle="拖拽排序(自定义把手)"
-          columns={columns2}
-          rowKey="index"
-          search={false}
-          pagination={false}
-          dataSource={dataSource2}
-          dragSortKey="key"
-          dragSortHandlerRender={dragHandleRender}
-          onDragSortEnd={handleDragSortEnd2}
+      <EditableProTable
+        headerTitle="可编辑表格"
+        columns={columns}
+        rowKey="id"
+        scroll={{
+          x: 960,
+        }}
+        value={dataSource}
+        onChange={setDataSource}
+        recordCreatorProps={{
+          newRecordType: 'dataSource',
+          record: () => ({
+            id: Date.now(),
+          }),
+        }}
+        toolBarRender={() => {
+          return [
+            <Button
+              type="primary"
+              key="save"
+              onClick={() => {
+                // dataSource 就是当前数据，可以调用 api 将其保存
+                console.log(dataSource);
+              }}
+            >
+              保存数据
+            </Button>,
+          ];
+        }}
+        editable={{
+          type: 'multiple',
+          editableKeys,
+          actionRender: (row, config, defaultDoms) => {
+            return [defaultDoms.delete];
+          },
+          onValuesChange: (record, recordList) => {
+            setDataSource(recordList);
+          },
+          onChange: setEditableRowKeys,
+        }}
+      />
+      <ProCard title="表格数据" headerBordered collapsible defaultCollapsed>
+        <ProFormField
+          ignoreFormItem
+          fieldProps={{
+            style: {
+              width: '100%',
+            },
+          }}
+          mode="read"
+          valueType="jsonCode"
+          text={JSON.stringify(dataSource)}
         />
-        <DragSortTable
-          headerTitle="拖拽排序(自定义把手)"
-          columns={columns2}
-          rowKey="index"
-          search={false}
-          pagination={false}
-          dataSource={dataSource2}
-          dragSortKey="sort"
-          dragSortHandlerRender={dragHandleRender}
-          onDragSortEnd={handleDragSortEnd2}
-        />
-      </div>
+      </ProCard>
     </>
   );
 };
-
-export default ObjArray;
