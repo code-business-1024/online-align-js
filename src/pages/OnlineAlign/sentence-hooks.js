@@ -30,14 +30,18 @@ export const SentenceProvider = ({ children }) => {
   };
 
   // 设置Input值
-  const setSentenceValue = (mark, value) => {
+  const setSentenceValue = (mark, key, value) => {
     let finalData = [];
-    console.log(`输入框Input数据: ${JSON.stringify(value)}`);
+    console.log(`输入框mark: ${mark} key: ${key} Input数据: ${JSON.stringify(value)}`);
     sentences.map((item) => {
       let tempObj = item;
-      tempObj[mark] = value;
+      if (item.key === key) {
+        tempObj[mark] = value;
+      }
+      console.log(tempObj);
       finalData.push(tempObj);
     });
+    console.log(finalData);
     setSentences(finalData);
   };
 

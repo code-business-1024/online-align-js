@@ -5,6 +5,7 @@ import ProTable from '@ant-design/pro-table';
 import { Input } from 'antd';
 import ToolBar from '../ToolBar/index';
 import FileUpload from '../FileUpload/index';
+import SentenceInput from '../SentenceInput/index';
 import './index.less';
 import { formatResponseObjArray, mergeObjArray } from '../../sentence-util';
 import defaultSentencesData from '../../sentence-data.json';
@@ -26,41 +27,25 @@ const AlignTable = () => {
       <ProTable
         columns={[
           {
+            key: 'key',
             title: 'No.*',
             width: '2%',
             dataIndex: 'key',
             render: (_) => <a>{_}</a>,
           },
           {
+            key: 'value1',
             title: '内容1',
             width: '43%',
             dataIndex: 'value1',
-            render: (_, record, index, action) => (
-              <Input.TextArea
-                value={currentInputValue ? currentInputValue : record.value1}
-                autoSize={{ minRows: 1 }}
-                bordered={true}
-                onFocus={(e) => {
-                  console.log(_, record, index, action);
-                  console.log(record.value1);
-                  // setCurrentInputValue(record.value1);
-                  console.log(currentInputValue);
-                }}
-                onChange={(e) => {
-                  console.log(e);
-                  setCurrentInputValue(e.target.value);
-                }}
-                onBlur={(e) => setSentenceValue('value1', e.target.value)}
-              />
-            ),
+            render: (_, record) => <SentenceInput record={record} mark="value1" />,
           },
           {
+            key: 'value2',
             title: '内容2',
-            width: '49%',
+            width: '43%',
             dataIndex: 'value2',
-            render: (_, record) => (
-              <Input.TextArea value={record.value2} autoSize={{ minRows: 1 }} bordered={true} />
-            ),
+            render: (_, record) => <SentenceInput record={record} mark="value2" />,
           },
         ]}
         dataSource={sentences}
