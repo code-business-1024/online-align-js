@@ -1,4 +1,5 @@
 import { Button, Divider } from 'antd';
+import { useSentences } from '../../sentence-hooks';
 import {
   StepBackwardOutlined,
   StepForwardOutlined,
@@ -15,7 +16,10 @@ import {
 
 import './index.less';
 
-function ToolBar() {
+const ToolBar = () => {
+  const { setSentenceValue, opKeys, opSentences, opMark, deleteSentenecByKeyAndMark } =
+    useSentences();
+
   return (
     <div className="root-container">
       <Button type="text" icon={<StepBackwardOutlined />}>
@@ -41,7 +45,13 @@ function ToolBar() {
         调换
       </Button>
       <Divider type="vertical" />
-      <Button type="text" icon={<CloseOutlined />}>
+      <Button
+        type="text"
+        icon={<CloseOutlined />}
+        onClick={() => {
+          deleteSentenecByKeyAndMark(opKeys[0], opMark);
+        }}
+      >
         删除
       </Button>
       <Button type="text" icon={<PlusOutlined />}>
@@ -56,6 +66,6 @@ function ToolBar() {
       </Button>
     </div>
   );
-}
+};
 
 export default ToolBar;
