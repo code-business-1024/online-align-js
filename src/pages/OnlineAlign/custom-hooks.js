@@ -10,10 +10,10 @@ export const useInputs = (initalValues) => {
 };
 
 export const useListenerKey = () => {
-  const [, forceRender] = useState();
+  const [state, setState] = useState();
   useEffect(() => {
-    window.addEventListener('keydown', forceRender);
-    // console.log('xxx');
-    return () => window.removeEventListener('keydown', forceRender);
+    window.addEventListener('keydown', setState(true));
+    // console.log();
+    return () => window.removeEventListener('keydown', setState(false));
   }, [,]);
 };

@@ -2,24 +2,36 @@ import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useSentences } from '../../sentence-hooks';
 import { useInput } from '../../custom-hooks';
 import ProTable from '@ant-design/pro-table';
-import { Input } from 'antd';
+import { Input, Checkbox } from 'antd';
 import ToolBar from '../ToolBar/index';
 import FileUpload from '../FileUpload/index';
 import SentenceInput from '../SentenceInput/index';
+import SentenceSheckbox from '../SentenceCheckbox';
 import './index.less';
 import { formatResponseObjArray, mergeObjArray } from '../../sentence-util';
 import defaultSentencesData from '../../sentence-data.json';
-import Item from 'antd/lib/list/Item';
 
 const AlignTable = () => {
-  const { currentInputValue, setCurrentInputValue } = useState('');
-  const { value, setValue } = useState('');
-
   const { sentences, setPartValue, setSentenceValue } = useSentences();
 
   useEffect(() => {
-    console.log('useE');
-  }, [, currentInputValue]);
+    window.addEventListener('keydown', ({ key }) => {
+      if (key === 'Shift') {
+        localStorage.setItem('shiftState', true);
+        console.log(localStorage.getItem('shiftState'));
+      }
+    });
+    window.addEventListener('keyup', ({ key }) => {
+      if (key === 'Shift') {
+        localStorage.setItem('shiftState', false);
+        console.log(localStorage.getItem('shiftState'));
+      }
+    });
+    return () => {
+      // window.removeEventListener('keydown');
+      // window.removeEventListener('keyup');
+    };
+  }, [,]);
 
   return (
     <>
@@ -34,11 +46,21 @@ const AlignTable = () => {
             render: (_) => <a>{_}</a>,
           },
           {
+            key: 'check1',
+            width: '2%',
+            render: (_, record) => <SentenceSheckbox record={record} mark="value1" />,
+          },
+          {
             key: 'value1',
             title: '内容1',
             width: '43%',
             dataIndex: 'value1',
             render: (_, record) => <SentenceInput record={record} mark="value1" />,
+          },
+          {
+            key: 'check2',
+            width: '2%',
+            render: (_, record) => <SentenceSheckbox record={record} mark="value2" />,
           },
           {
             key: 'value2',

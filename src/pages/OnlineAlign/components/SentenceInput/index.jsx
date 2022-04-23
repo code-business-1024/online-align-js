@@ -8,8 +8,7 @@ const SentenceInput = ({ record, mark }) => {
   const [lineRecord, setLineRecord] = useState(record);
   const [currentMark, setCurrentMark] = useState(mark);
   const [borderedMark, setBorderedMark] = useState(false);
-  const { setSentenceValue, setOpKeys, setOpSentences, setOpMark, deleteSentenecByKeyAndMark } =
-    useSentences();
+  const { setSentenceValue } = useSentences();
 
   useEffect(() => {
     const { key, value1, value2 } = record || {};
@@ -20,27 +19,21 @@ const SentenceInput = ({ record, mark }) => {
   return (
     <>
       <Input.TextArea
+        disabled={lineRecord[currentMark] === '' ? true : false}
         className="custom-input"
         value={value}
         autoSize={{ minRows: 1 }}
         bordered={borderedMark}
         onChange={(e) => setValue(e.target.value)}
         onBlur={(e) => {
-          // setBorderedMark(false);
-          setSentenceValue(currentMark, lineRecord.key, value);
+          setBorderedMark(false);
+          e.target.value != lineRecord[currentMark] &&
+            setSentenceValue(currentMark, lineRecord.key, value);
         }}
         onFocus={(e) => {
-          console.log(`聚焦元素 => key: ${lineRecord.key} mark: ${currentMark} value: ${value}`);
           setBorderedMark(true);
-          let opKeys = [];
-          opKeys.push(lineRecord.key);
-          setOpKeys(opKeys);
-          let opSentences = [];
-          opSentences.push(value);
-          setOpSentences(opSentences);
-          setOpMark(currentMark);
+          // setOpObj(currentMark, lineRecord);
         }}
-        onKeyDown={(e) => console.log(e)}
       />
     </>
   );

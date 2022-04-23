@@ -1,6 +1,11 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import defaultSentenceData from './sentence-data.json';
-import { formatResponseObjArray, mergeObjArray } from '../OnlineAlign/sentence-util';
+import {
+  formatResponseObjArray,
+  mergeObjArray,
+  rebuildObjArrayKeyByIndex,
+} from '../OnlineAlign/sentence-util';
+import useListenerKey from './custom-hooks';
 
 // 创建 SentenceContext 上下文
 const SentenceContext = createContext([]);
@@ -8,10 +13,57 @@ const SentenceContext = createContext([]);
 export const useSentences = () => useContext(SentenceContext);
 
 export const SentenceProvider = ({ children }) => {
-  const [sentences, setSentences] = useState(defaultSentenceData);
+  // 当前操作标识 value1 value2
+  const [opMark, setOpMark] = useState('value1');
+  // 当用户按住shift可以在以下变量中存放多个数据
   const [opKeys, setOpKeys] = useState([]);
-  const [opMark, setOpMark] = useState();
   const [opSententces, setOpSentences] = useState([]);
+
+  const [opRecords, setOpRecords] = useState([]);
+
+  const [sentences, setSentences] = useState(defaultSentenceData);
+
+  const [checkboxMark, setCheckboxMark] = useState(true);
+
+  /**
+   * 设置当前操作标识参数
+   * @param {*} mark
+   * @param {*} key
+   * @param {*} sentence
+   */
+  const setOpObj = (flag, mark, record) => {
+    console.log('🚀 ~ setOpObj ~~ flag:', flag, 'mark:', mark);
+    console.table(record);
+    let finalOpRecord = [];
+    if (mark) {
+      setOpMark(mark);
+      console.log('🚀 ~ setOpObj ~~ mark:', mark, ' => opMark:', opMark);
+    }
+    if (flag) {
+      // 新增
+      finalOpRecord = opRecords;
+      finalOpRecord.push(record);
+    } else {
+      // 减少
+      finalOpRecord = opRecords.filter((item) => item.key != record.key);
+    }
+    setOpRecords(finalOpRecord);
+    console.log('🚀 ~ setOpRecords ~~ finalOpRecord:', finalOpRecord, '=> opRecords:', opRecords);
+    console.table(finalOpRecord);
+  };
+
+  /**
+   * 清空当前操作标识列表
+   * 清空选中项
+   */
+  const clearOpObj = () => {
+    setOpRecords([]);
+    setCheckboxMark(false);
+    console.log(
+      '🚀 ~ file: sentence-hooks.js ~ line 63 ~ clearOpObj ~ setCheckboxMark',
+      checkboxMark,
+    );
+  };
 
   /**
    * 文件上传设置部分 table values 值
@@ -21,7 +73,7 @@ export const SentenceProvider = ({ children }) => {
   const setPartValue = (mark, data) => {
     let finalData = [];
     let formatData = formatResponseObjArray(mark, data);
-    console.log(`格式化Response数据 ${JSON.stringify(formatData)}`);
+    // console.log(`格式化Response数据 ${JSON.stringify(formatData)}`);
     switch (mark) {
       case 'value1':
         finalData = mergeObjArray(data, sentences);
@@ -32,7 +84,7 @@ export const SentenceProvider = ({ children }) => {
       default:
         break;
     }
-    console.log(`最终合并Sentence数据 ${JSON.stringify(finalData)}`);
+    // console.log(`最终合并Sentence数据 ${JSON.stringify(finalData)}`);
     setSentences(finalData);
   };
 
@@ -45,50 +97,67 @@ export const SentenceProvider = ({ children }) => {
   const setSentenceValue = (mark, key, value) => {
     let finalData = [];
     console.log(`输入框mark: ${mark} key: ${key} Input数据: ${JSON.stringify(value)}`);
+    // console.table(mark, key, value);
     sentences.map((item) => {
       let tempObj = item;
       if (item.key === key) {
         tempObj[mark] = value;
       }
-      console.log(tempObj);
+      // console.log(tempObj);
       finalData.push(tempObj);
     });
-    console.log(finalData);
     setSentences(finalData);
+    console.table(sentences);
   };
 
   // 在上方插入 在下方插入
+  const insertSentenceByKey = (key, mark) => {};
 
   // 删除
-  const deleteSentenecByKeyAndMark = (key, mark) => {
-    console.log(`删除sentence => mark: ${mark} key: ${key}`);
+  const deleteSentenceByKeyAndMark = () => {
+    console.log('🚀 ~ 删除前参数预览 => 当前活动列 opRecords:', opRecords);
+    console.table(opRecords);
+    let maxKey = Math.max(...Object.keys(opRecords)) + 1;
     let opPartData = [];
     sentences.map((item) => {
-      if (key === item.key) {
-      } else {
+      let tempOpRecord = opRecords.filter((opItem) => opItem.key === item.key)[0] || {};
+      console.log(
+        '🚀 ~ file: sentence-hooks.js ~ line 105 ~ sentences.map ~ tempOpRecord',
+        tempOpRecord,
+      );
+      if (JSON.stringify(tempOpRecord) === '{}') {
         let tempObj = {};
-        tempObj['key'] = item.key > key ? item.key - 1 : item.key;
-        tempObj['value'] = item[mark];
+        tempObj['key'] = item.key;
+        tempObj['value'] = item[opMark];
+        console.log('🚀 ~ file: sentence-hooks.js ~ line 111 ~ sentences.map ~ tempObj', tempObj);
         opPartData.push(tempObj);
       }
     });
-    console.log(opPartData);
-    setPartValue(mark, opPartData);
+    opPartData = rebuildObjArrayKeyByIndex(opPartData);
+    console.log('🚀 ~ 删除前参数预览 => 删除后的部分结果列 opPartData:', opPartData);
+    console.table(opPartData);
+    setPartValue(opMark, opPartData);
   };
 
   return (
     <SentenceContext.Provider
       value={{
+        opRecords,
         sentences,
         opKeys,
         opMark,
         opSententces,
+        checkboxMark,
+        setCheckboxMark,
+        clearOpObj,
+        setOpObj,
         setOpKeys,
         setOpMark,
         setOpSentences,
         setPartValue,
         setSentenceValue,
-        deleteSentenecByKeyAndMark,
+        deleteSentenceByKeyAndMark,
+        insertSentenceByKey,
       }}
     >
       {children}

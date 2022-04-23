@@ -17,8 +17,7 @@ import {
 import './index.less';
 
 const ToolBar = () => {
-  const { setSentenceValue, opKeys, opSentences, opMark, deleteSentenecByKeyAndMark } =
-    useSentences();
+  const { deleteSentenceByKeyAndMark, clearOpObj } = useSentences();
 
   return (
     <div className="root-container">
@@ -29,19 +28,49 @@ const ToolBar = () => {
         前进
       </Button>
       <Divider type="vertical" />
-      <Button type="text" icon={<VerticalAlignMiddleOutlined />}>
+      <Button
+        type="text"
+        icon={<VerticalAlignMiddleOutlined />}
+        onClick={() => {
+          console.log('合并');
+        }}
+      >
         合并
       </Button>
-      <Button type="text" icon={<ColumnHeightOutlined />}>
+      <Button
+        type="text"
+        icon={<ColumnHeightOutlined />}
+        onClick={() => {
+          console.log('拆分');
+        }}
+      >
         拆分
       </Button>
-      <Button type="text" icon={<VerticalAlignTopOutlined />}>
+      <Button
+        type="text"
+        icon={<VerticalAlignTopOutlined />}
+        onClick={() => {
+          console.log('上移');
+        }}
+      >
         上移
       </Button>
-      <Button type="text" icon={<VerticalAlignBottomOutlined />}>
+      <Button
+        type="text"
+        icon={<VerticalAlignBottomOutlined />}
+        onClick={() => {
+          console.log('下移');
+        }}
+      >
         下移
       </Button>
-      <Button type="text" icon={<RetweetOutlined />}>
+      <Button
+        type="text"
+        icon={<RetweetOutlined />}
+        onClick={() => {
+          console.log('调换');
+        }}
+      >
         调换
       </Button>
       <Divider type="vertical" />
@@ -49,21 +78,37 @@ const ToolBar = () => {
         type="text"
         icon={<CloseOutlined />}
         onClick={() => {
-          deleteSentenecByKeyAndMark(opKeys[0], opMark);
+          deleteSentenceByKeyAndMark();
+          clearOpObj();
         }}
       >
         删除
       </Button>
-      <Button type="text" icon={<PlusOutlined />}>
-        插入
+      <Button
+        type="text"
+        icon={<PlusOutlined />}
+        onClick={() => {
+          console.log('插入');
+        }}
+      >
+        上方插入
+      </Button>
+      <Button
+        type="text"
+        icon={<PlusOutlined />}
+        onClick={() => {
+          console.log('插入');
+        }}
+      >
+        下方插入
       </Button>
       <Divider type="vertical" />
-      <Button type="text" icon={<SearchOutlined />}>
+      {/* <Button type="text" icon={<SearchOutlined />}>
         查找与替换
       </Button>
       <Button type="text" icon={<UploadOutlined />}>
         提取术语
-      </Button>
+      </Button> */}
     </div>
   );
 };

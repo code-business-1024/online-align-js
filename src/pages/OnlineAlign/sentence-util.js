@@ -5,7 +5,7 @@ export const formatResponseObjArray = (value, data) => {
   data.map((item) => {
     tempObj = item;
     tempObj[value] = item['value'];
-    tempObj[value === 'value1' ? 'value2' : 'value1'] = '---';
+    tempObj[value === 'value1' ? 'value2' : 'value1'] = '';
     delete tempObj['value'];
     formatData.push(tempObj);
   });
@@ -39,7 +39,7 @@ export const mergeObjArray = (arr1, arr2) => {
         finalArray.push({
           key: item1.key,
           value1: item1.value1,
-          value2: '---',
+          value2: '',
         });
       }
     });
@@ -57,12 +57,22 @@ export const mergeObjArray = (arr1, arr2) => {
       } else {
         finalArray.push({
           key: item2.key,
-          value1: '---',
+          value1: '',
           value2: item2.value2,
         });
       }
     });
   }
   console.log(finalArray);
+  return finalArray;
+};
+
+export const rebuildObjArrayKeyByIndex = (arr) => {
+  let finalArray = [];
+  arr.map((item, index) => {
+    let tempObj = item;
+    tempObj['key'] = index + 1;
+    finalArray.push(tempObj);
+  });
   return finalArray;
 };
