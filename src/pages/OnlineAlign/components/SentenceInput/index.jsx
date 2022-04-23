@@ -19,10 +19,10 @@ const SentenceInput = ({ record, mark }) => {
   return (
     <>
       <Input.TextArea
-        disabled={lineRecord[currentMark] === '' ? true : false}
+        // disabled={lineRecord[currentMark] === '' ? true : false}
         className="custom-input"
         value={value}
-        autoSize={{ minRows: 1 }}
+        autoSize={{ minRows: 1, maxRows: 10 }}
         bordered={borderedMark}
         onChange={(e) => setValue(e.target.value)}
         onBlur={(e) => {

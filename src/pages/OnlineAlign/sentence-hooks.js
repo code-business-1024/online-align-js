@@ -6,6 +6,7 @@ import {
   rebuildObjArrayKeyByIndex,
 } from '../OnlineAlign/sentence-util';
 import useListenerKey from './custom-hooks';
+import { notification } from 'antd';
 
 // 创建 SentenceContext 上下文
 const SentenceContext = createContext([]);
@@ -16,9 +17,6 @@ export const SentenceProvider = ({ children }) => {
   // 当前操作标识 value1 value2
   const [opMark, setOpMark] = useState('value1');
   // 当用户按住shift可以在以下变量中存放多个数据
-  const [opKeys, setOpKeys] = useState([]);
-  const [opSententces, setOpSentences] = useState([]);
-
   const [opRecords, setOpRecords] = useState([]);
 
   const [sentences, setSentences] = useState(defaultSentenceData);
@@ -73,7 +71,7 @@ export const SentenceProvider = ({ children }) => {
   const setPartValue = (mark, data) => {
     let finalData = [];
     let formatData = formatResponseObjArray(mark, data);
-    // console.log(`格式化Response数据 ${JSON.stringify(formatData)}`);
+    console.log(`格式化Response数据 ${JSON.stringify(formatData)}`);
     switch (mark) {
       case 'value1':
         finalData = mergeObjArray(data, sentences);
@@ -110,8 +108,49 @@ export const SentenceProvider = ({ children }) => {
     console.table(sentences);
   };
 
-  // 在上方插入 在下方插入
-  const insertSentenceByKey = (key, mark) => {};
+  /**
+   * 在上方插入 在下方插入
+   * @param {*} type up & down
+   * @param {*} key  number
+   * @param {*} mark value1 & value2
+   */
+  const insertSentenceByKey = (type) => {
+    let opPartData = [];
+    console.log('🚀 ~ 插入前参数预览 => 当前活动列 opRecords:', opRecords);
+    if (opRecords.length != 1) {
+      notification.warning({
+        message: '操作非法!',
+        description: '有且仅能够选中一项进行操作!',
+        duration: 2,
+      });
+      return;
+    }
+    let key = opRecords[0].key;
+    // 处理插入逻辑
+    sentences.map((item) => {
+      let tempObj = {
+        key: item.key,
+        value: item[opMark],
+      };
+      let addObj = {
+        key: type === 'up' ? key - 1 : key + 1,
+        value: '',
+      };
+      if (type === 'up' && item.key === key) {
+        opPartData.push(addObj);
+        opPartData.push(tempObj);
+      } else if (type === 'down' && item.key === key) {
+        opPartData.push(tempObj);
+        opPartData.push(addObj);
+      } else {
+        opPartData.push(tempObj);
+      }
+    });
+    opPartData = rebuildObjArrayKeyByIndex(opPartData);
+    console.table(opPartData);
+    console.log('🚀 ~ file: sentence-hooks.js ~ line 147 ~ insertSentenceByKey ~ opMark', opMark);
+    setPartValue(opMark, opPartData);
+  };
 
   // 删除
   const deleteSentenceByKeyAndMark = () => {
@@ -121,15 +160,10 @@ export const SentenceProvider = ({ children }) => {
     let opPartData = [];
     sentences.map((item) => {
       let tempOpRecord = opRecords.filter((opItem) => opItem.key === item.key)[0] || {};
-      console.log(
-        '🚀 ~ file: sentence-hooks.js ~ line 105 ~ sentences.map ~ tempOpRecord',
-        tempOpRecord,
-      );
       if (JSON.stringify(tempOpRecord) === '{}') {
         let tempObj = {};
         tempObj['key'] = item.key;
         tempObj['value'] = item[opMark];
-        console.log('🚀 ~ file: sentence-hooks.js ~ line 111 ~ sentences.map ~ tempObj', tempObj);
         opPartData.push(tempObj);
       }
     });
@@ -144,16 +178,12 @@ export const SentenceProvider = ({ children }) => {
       value={{
         opRecords,
         sentences,
-        opKeys,
         opMark,
-        opSententces,
         checkboxMark,
         setCheckboxMark,
         clearOpObj,
         setOpObj,
-        setOpKeys,
         setOpMark,
-        setOpSentences,
         setPartValue,
         setSentenceValue,
         deleteSentenceByKeyAndMark,

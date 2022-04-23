@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useSentences } from '../../sentence-hooks';
 import { Checkbox } from 'antd';
 import './index.less';
-import { set } from 'lodash';
 
 const SentenceSheckbox = ({ record, mark }) => {
   const { setOpObj, checkboxMark, setCheckboxMark } = useSentences();

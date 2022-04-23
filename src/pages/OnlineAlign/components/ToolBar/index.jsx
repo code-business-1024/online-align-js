@@ -17,7 +17,7 @@ import {
 import './index.less';
 
 const ToolBar = () => {
-  const { deleteSentenceByKeyAndMark, clearOpObj } = useSentences();
+  const { deleteSentenceByKeyAndMark, insertSentenceByKey, clearOpObj } = useSentences();
 
   return (
     <div className="root-container">
@@ -88,7 +88,8 @@ const ToolBar = () => {
         type="text"
         icon={<PlusOutlined />}
         onClick={() => {
-          console.log('插入');
+          insertSentenceByKey('up');
+          clearOpObj();
         }}
       >
         上方插入
@@ -97,7 +98,8 @@ const ToolBar = () => {
         type="text"
         icon={<PlusOutlined />}
         onClick={() => {
-          console.log('插入');
+          insertSentenceByKey('down');
+          clearOpObj();
         }}
       >
         下方插入

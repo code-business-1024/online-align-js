@@ -13,7 +13,6 @@ const OnlineAlign = () => {
           <ToolBar />
           <AlignTable />
         </SentenceProvider>
-        {/* <AlignTable id="right-at" /> */}
       </div>
     </>
   );
