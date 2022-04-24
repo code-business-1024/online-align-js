@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useSentences } from '../../sentence-hooks';
-import { useInput } from '../../custom-hooks';
+import { useInput, useListenerFocusElement } from '../../custom-hooks';
 import ProTable from '@ant-design/pro-table';
 import { Input, Checkbox } from 'antd';
 import ToolBar from '../ToolBar/index';
@@ -13,6 +13,8 @@ import defaultSentencesData from '../../sentence-data.json';
 
 const AlignTable = () => {
   const { sentences, setPartValue, setSentenceValue } = useSentences();
+
+  useListenerFocusElement();
 
   useEffect(() => {
     window.addEventListener('keydown', ({ key }) => {

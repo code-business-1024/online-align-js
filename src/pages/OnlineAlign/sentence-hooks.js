@@ -23,6 +23,8 @@ export const SentenceProvider = ({ children }) => {
 
   const [checkboxMark, setCheckboxMark] = useState(true);
 
+  const [focusElementId, setFocusElementId] = useState();
+
   /**
    * 设置当前操作标识参数
    * @param {*} mark
@@ -156,6 +158,14 @@ export const SentenceProvider = ({ children }) => {
   const deleteSentenceByKeyAndMark = () => {
     console.log('🚀 ~ 删除前参数预览 => 当前活动列 opRecords:', opRecords);
     console.table(opRecords);
+    if (opRecords.length == 0) {
+      notification.warning({
+        message: '操作非法!',
+        description: '请保证至少选中一项进行操作!',
+        duration: 2,
+      });
+      return;
+    }
     let maxKey = Math.max(...Object.keys(opRecords)) + 1;
     let opPartData = [];
     sentences.map((item) => {
@@ -173,6 +183,44 @@ export const SentenceProvider = ({ children }) => {
     setPartValue(opMark, opPartData);
   };
 
+  // 上移 下移
+
+  // 拆分
+  const splitSentence = () => {
+    let opPartData = [];
+    console.log(focusElementId);
+    let dom = document.getElementById(focusElementId);
+    setTimeout(() => {
+      console.log(dom.selectionStart, dom.selectionEnd);
+    }, 0);
+    let opContent = opRecords[0][opMark] + '';
+    let key = opRecords[0].key;
+    let splitObj1 = {
+      key: key,
+      value: opContent.substring(0, dom.selectionStart),
+    };
+    let splitObj2 = {
+      key: key + 1,
+      value: opContent.substring(dom.selectionStart),
+    };
+    sentences.map((item) => {
+      if (item.key === key) {
+        opPartData.push(splitObj1);
+        opPartData.push(splitObj2);
+      } else {
+        let tempObj = {
+          key: item.key,
+          value: item[opMark],
+        };
+        opPartData.push(tempObj);
+      }
+    });
+    opPartData = rebuildObjArrayKeyByIndex(opPartData);
+    setPartValue(opMark, opPartData);
+  };
+
+  // 合并
+
   return (
     <SentenceContext.Provider
       value={{
@@ -180,6 +228,9 @@ export const SentenceProvider = ({ children }) => {
         sentences,
         opMark,
         checkboxMark,
+        focusElementId,
+        splitSentence,
+        setFocusElementId,
         setCheckboxMark,
         clearOpObj,
         setOpObj,

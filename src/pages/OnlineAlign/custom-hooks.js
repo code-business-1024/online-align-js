@@ -17,3 +17,9 @@ export const useListenerKey = () => {
     return () => window.removeEventListener('keydown', setState(false));
   }, [,]);
 };
+
+export const useListenerFocusElement = () => {
+  useEffect(() => {
+    // console.log(document.activeElement);
+  });
+};
