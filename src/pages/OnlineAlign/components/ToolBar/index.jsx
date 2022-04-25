@@ -25,6 +25,7 @@ const ToolBar = () => {
     splitSentence,
     mergeSentences,
     moveSentence,
+    exchangeSentences,
     stackIndex,
     readStack,
     clearStack,
@@ -104,7 +105,8 @@ const ToolBar = () => {
         type="text"
         icon={<RetweetOutlined />}
         onClick={() => {
-          console.log('调换');
+          exchangeSentences();
+          clearOpObj();
         }}
       >
         调换

@@ -53,7 +53,7 @@ export const SentenceProvider = ({ children }) => {
     }
     if (index > currentStack.length - 1) {
       notification.warning({
-        message: '回退失败!',
+        message: '前进失败!',
         description: '当前版本缓存记录已是最新的记录!',
         duration: 2,
       });
@@ -355,6 +355,47 @@ export const SentenceProvider = ({ children }) => {
     setPartValue(opMark, opPartData);
   };
 
+  // 调换
+  const exchangeSentences = () => {
+    let opPartData = [];
+    if (opRecords.length != 2) {
+      notification.warning({
+        message: '操作非法!',
+        description: '有且仅能够选中两项进行操作!',
+        duration: 2,
+      });
+      return;
+    }
+    console.table(opRecords);
+    let tempObj = {};
+    sentences.map((item) => {
+      if (item.key === opRecords[0].key) {
+        tempObj = {
+          key: opRecords[1].key,
+          value: opRecords[1][opMark],
+        };
+        console.log('🚀 ~ file: sentence-hooks.js ~ line 378 ~ sentences.map ~ tempObj', tempObj);
+        opPartData.push(tempObj);
+      } else if (item.key === opRecords[1].key) {
+        tempObj = {
+          key: opRecords[0].key,
+          value: opRecords[0][opMark],
+        };
+        console.log('🚀 ~ file: sentence-hooks.js ~ line 385 ~ sentences.map ~ tempObj', tempObj);
+        opPartData.push(tempObj);
+      } else {
+        tempObj = {
+          key: item.key,
+          value: item[opMark],
+        };
+        opPartData.push(tempObj);
+      }
+    });
+    opPartData = rebuildObjArrayKeyByIndex(opPartData);
+    console.table(opPartData);
+    setPartValue(opMark, opPartData);
+  };
+
   return (
     <SentenceContext.Provider
       value={{
@@ -364,6 +405,7 @@ export const SentenceProvider = ({ children }) => {
         checkboxMark,
         focusElementId,
         stackIndex,
+        exchangeSentences,
         setStackIndex,
         pushStack,
         readStack,
