@@ -35,7 +35,7 @@ export const mergeObjArray = (arr1, arr2) => {
           value1: item1.value1,
           value2: value2,
         });
-      } else {
+      } else if (item1.value1 !== '') {
         finalArray.push({
           key: item1.key,
           value1: item1.value1,
@@ -54,7 +54,7 @@ export const mergeObjArray = (arr1, arr2) => {
           value1: value1,
           value2: item2.value2,
         });
-      } else {
+      } else if (item2.value2 !== '') {
         finalArray.push({
           key: item2.key,
           value1: '',

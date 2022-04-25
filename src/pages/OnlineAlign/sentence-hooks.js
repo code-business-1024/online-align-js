@@ -27,6 +27,7 @@ export const SentenceProvider = ({ children }) => {
 
   const [sentenceDataStack, setSentenceDataStack] = useState([]);
 
+  // 还需要维护这个值的变化
   const [stackIndex, setStackIndex] = useState(0);
 
   // 写入缓存
