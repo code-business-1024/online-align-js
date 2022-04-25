@@ -110,6 +110,45 @@ export const SentenceProvider = ({ children }) => {
     console.table(sentences);
   };
 
+  // 上移 下移
+  const moveSentence = (type) => {
+    let opPartData = [];
+    if (opRecords.length != 1) {
+      notification.warning({
+        message: '操作非法!',
+        description: '有且仅能够选中一项进行操作!',
+        duration: 2,
+      });
+      return;
+    }
+    let tempObj = {};
+    let moveObj = {
+      key: type === 'up' ? opRecords[0].key - 1 : opRecords[0].key + 1,
+      value: opRecords[0][opMark],
+    };
+    sentences.map((item) => {
+      tempObj = {
+        key: item.key,
+        value: item[opMark],
+      };
+      if (item.key === opRecords[0].key) {
+      } else if (item.key === moveObj.key) {
+        if (type === 'up') {
+          opPartData.push(moveObj);
+          opPartData.push(tempObj);
+        } else {
+          opPartData.push(tempObj);
+          opPartData.push(moveObj);
+        }
+      } else {
+        opPartData.push(tempObj);
+      }
+    });
+    opPartData = rebuildObjArrayKeyByIndex(opPartData);
+    console.table(opPartData);
+    setPartValue(opMark, opPartData);
+  };
+
   /**
    * 在上方插入 在下方插入
    * @param {*} type up & down
@@ -183,8 +222,6 @@ export const SentenceProvider = ({ children }) => {
     setPartValue(opMark, opPartData);
   };
 
-  // 上移 下移
-
   // 拆分
   const splitSentence = () => {
     let opPartData = [];
@@ -220,6 +257,47 @@ export const SentenceProvider = ({ children }) => {
   };
 
   // 合并
+  const mergeSentences = () => {
+    console.table(opRecords);
+    if (opRecords.length < 2) {
+      notification.warning({
+        message: '操作非法!',
+        description: '请保证至少选中两项进行操作!',
+        duration: 2,
+      });
+      return;
+    }
+    let opPartData = [];
+    let mergeContent = '';
+    opRecords.map((item) => {
+      mergeContent = mergeContent + item[opMark];
+      console.log(mergeContent);
+    });
+    let mergeObj = {
+      key: Math.min(...Object.keys(opRecords)) + 1,
+      value: mergeContent,
+    };
+    console.table(mergeObj);
+    sentences.map((item) => {
+      let tempOpRecord = opRecords.filter((opItem) => opItem.key === item.key)[0] || {};
+      console.log(
+        '🚀 ~ file: sentence-hooks.js ~ line 245 ~ opRecords.map ~ tempOpRecord',
+        tempOpRecord,
+      );
+
+      if (JSON.stringify(tempOpRecord) === '{}') {
+        let tempObj = {};
+        tempObj['key'] = item.key;
+        tempObj['value'] = item[opMark];
+        opPartData.push(tempObj);
+      } else if (item.key === mergeObj.key) {
+        opPartData.push(mergeObj);
+      }
+    });
+    opPartData = rebuildObjArrayKeyByIndex(opPartData);
+    console.table(opPartData);
+    setPartValue(opMark, opPartData);
+  };
 
   return (
     <SentenceContext.Provider
@@ -229,6 +307,8 @@ export const SentenceProvider = ({ children }) => {
         opMark,
         checkboxMark,
         focusElementId,
+        moveSentence,
+        mergeSentences,
         splitSentence,
         setFocusElementId,
         setCheckboxMark,

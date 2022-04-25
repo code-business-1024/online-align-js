@@ -17,8 +17,14 @@ import {
 import './index.less';
 
 const ToolBar = () => {
-  const { deleteSentenceByKeyAndMark, insertSentenceByKey, clearOpObj, splitSentence } =
-    useSentences();
+  const {
+    deleteSentenceByKeyAndMark,
+    insertSentenceByKey,
+    clearOpObj,
+    splitSentence,
+    mergeSentences,
+    moveSentence,
+  } = useSentences();
 
   return (
     <div className="root-container">
@@ -33,7 +39,8 @@ const ToolBar = () => {
         type="text"
         icon={<VerticalAlignMiddleOutlined />}
         onClick={() => {
-          console.log('合并');
+          mergeSentences();
+          clearOpObj();
         }}
       >
         合并
@@ -48,14 +55,22 @@ const ToolBar = () => {
       >
         拆分
       </Button>
-      <Button type="text" icon={<VerticalAlignTopOutlined />} onClick={() => {}}>
+      <Button
+        type="text"
+        icon={<VerticalAlignTopOutlined />}
+        onClick={() => {
+          moveSentence('up');
+          clearOpObj();
+        }}
+      >
         上移
       </Button>
       <Button
         type="text"
         icon={<VerticalAlignBottomOutlined />}
         onClick={() => {
-          console.log('下移');
+          moveSentence('down');
+          clearOpObj();
         }}
       >
         下移
