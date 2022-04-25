@@ -66,6 +66,12 @@ export const SentenceProvider = ({ children }) => {
     setSentences(currentSentences);
   };
 
+  // 清除缓存
+  const clearStack = () => {
+    setSentences([]);
+    localStorage.removeItem('sentenceDataStack');
+  };
+
   /**
    * 设置当前操作标识参数
    * @param {*} mark
@@ -268,6 +274,14 @@ export const SentenceProvider = ({ children }) => {
   const splitSentence = () => {
     let opPartData = [];
     console.log(focusElementId);
+    if (!focusElementId) {
+      notification.warning({
+        message: '操作非法!',
+        description: '当前未检测到光标所聚焦元素!',
+        duration: 2,
+      });
+      return;
+    }
     let dom = document.getElementById(focusElementId);
     setTimeout(() => {
       console.log(dom.selectionStart, dom.selectionEnd);
@@ -353,6 +367,7 @@ export const SentenceProvider = ({ children }) => {
         setStackIndex,
         pushStack,
         readStack,
+        clearStack,
         moveSentence,
         mergeSentences,
         splitSentence,

@@ -27,10 +27,15 @@ const ToolBar = () => {
     moveSentence,
     stackIndex,
     readStack,
+    clearStack,
   } = useSentences();
   return (
     <div className="root-container">
+      <Button className="toolbar-button" type="primary" icon={<SyncOutlined />}>
+        导出
+      </Button>
       <Button
+        className="toolbar-button"
         type="text"
         icon={<StepBackwardOutlined />}
         onClick={() => {
@@ -40,6 +45,7 @@ const ToolBar = () => {
         回退
       </Button>
       <Button
+        className="toolbar-button"
         type="text"
         icon={<StepForwardOutlined />}
         onClick={() => {
@@ -48,11 +54,9 @@ const ToolBar = () => {
       >
         前进
       </Button>
-      <Button type="text" icon={<SyncOutlined />}>
-        缓存
-      </Button>
       <Divider type="vertical" />
       <Button
+        className="toolbar-button"
         type="text"
         icon={<VerticalAlignMiddleOutlined />}
         onClick={() => {
@@ -63,6 +67,7 @@ const ToolBar = () => {
         合并
       </Button>
       <Button
+        className="toolbar-button"
         type="text"
         icon={<ColumnHeightOutlined />}
         onClick={() => {
@@ -73,6 +78,7 @@ const ToolBar = () => {
         拆分
       </Button>
       <Button
+        className="toolbar-button"
         type="text"
         icon={<VerticalAlignTopOutlined />}
         onClick={() => {
@@ -83,6 +89,7 @@ const ToolBar = () => {
         上移
       </Button>
       <Button
+        className="toolbar-button"
         type="text"
         icon={<VerticalAlignBottomOutlined />}
         onClick={() => {
@@ -93,6 +100,7 @@ const ToolBar = () => {
         下移
       </Button>
       <Button
+        className="toolbar-button"
         type="text"
         icon={<RetweetOutlined />}
         onClick={() => {
@@ -103,16 +111,7 @@ const ToolBar = () => {
       </Button>
       <Divider type="vertical" />
       <Button
-        type="text"
-        icon={<CloseOutlined />}
-        onClick={() => {
-          deleteSentenceByKeyAndMark();
-          clearOpObj();
-        }}
-      >
-        删除
-      </Button>
-      <Button
+        className="toolbar-button"
         type="text"
         icon={<PlusOutlined />}
         onClick={() => {
@@ -123,6 +122,7 @@ const ToolBar = () => {
         上方插入
       </Button>
       <Button
+        className="toolbar-button"
         type="text"
         icon={<PlusOutlined />}
         onClick={() => {
@@ -133,12 +133,39 @@ const ToolBar = () => {
         下方插入
       </Button>
       <Divider type="vertical" />
-      {/* <Button type="text" icon={<SearchOutlined />}>
+      {/* <Button className="toolbar-button" type="text" icon={<SearchOutlined />}>
         查找与替换
       </Button>
-      <Button type="text" icon={<UploadOutlined />}>
+      <Button className="toolbar-button" type="text" icon={<UploadOutlined />}>
         提取术语
       </Button> */}
+      <Button
+        className="toolbar-button"
+        type="primary"
+        danger
+        icon={<CloseOutlined />}
+        onClick={() => {
+          deleteSentenceByKeyAndMark();
+          clearOpObj();
+        }}
+      >
+        删除
+      </Button>
+      <Button className="toolbar-button" type="text" icon={<SyncOutlined />}>
+        缓存
+      </Button>
+      <Button
+        className="toolbar-button"
+        type="primary"
+        danger
+        icon={<SyncOutlined />}
+        onClick={() => {
+          clearStack();
+          clearOpObj();
+        }}
+      >
+        重置
+      </Button>
     </div>
   );
 };
