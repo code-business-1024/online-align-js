@@ -25,6 +25,47 @@ export const SentenceProvider = ({ children }) => {
 
   const [focusElementId, setFocusElementId] = useState();
 
+  const [sentenceDataStack, setSentenceDataStack] = useState([]);
+
+  const [stackIndex, setStackIndex] = useState(0);
+
+  // 写入缓存
+  const pushStack = (data) => {
+    console.table(data);
+    let currentStack = JSON.parse(localStorage.getItem('sentenceDataStack')) || [];
+    console.log('🚀 ~ file: sentence-hooks.js ~ line 36 ~ pushStack ~ currentStack', currentStack);
+    currentStack.push(data);
+    console.log(currentStack);
+    localStorage.setItem('sentenceDataStack', JSON.stringify(currentStack));
+  };
+
+  // 读取缓存
+  const readStack = (index) => {
+    let currentStack = JSON.parse(localStorage.getItem('sentenceDataStack')) || [];
+    console.log('🚀 ~ file: sentence-hooks.js ~ line 44 ~ readStack ~ index', index);
+    if (index < 0) {
+      notification.warning({
+        message: '回退失败!',
+        description: '当前版本缓存记录已是最早的记录!',
+        duration: 2,
+      });
+      return;
+    }
+    if (index > currentStack.length - 1) {
+      notification.warning({
+        message: '回退失败!',
+        description: '当前版本缓存记录已是最新的记录!',
+        duration: 2,
+      });
+      return;
+    }
+    // console.log('🚀 ~ file: sentence-hooks.js ~ line 45 ~ readStack ~ currentStack', currentStack);
+    let currentSentences = currentStack[index != undefined ? index : currentStack.length - 1];
+    setStackIndex(index != undefined ? index : currentStack.length - 1);
+    // console.table(currentSentences);
+    setSentences(currentSentences);
+  };
+
   /**
    * 设置当前操作标识参数
    * @param {*} mark
@@ -86,6 +127,7 @@ export const SentenceProvider = ({ children }) => {
     }
     // console.log(`最终合并Sentence数据 ${JSON.stringify(finalData)}`);
     setSentences(finalData);
+    pushStack(finalData);
   };
 
   /**
@@ -107,7 +149,7 @@ export const SentenceProvider = ({ children }) => {
       finalData.push(tempObj);
     });
     setSentences(finalData);
-    console.table(sentences);
+    pushStack(finalData);
   };
 
   // 上移 下移
@@ -307,6 +349,10 @@ export const SentenceProvider = ({ children }) => {
         opMark,
         checkboxMark,
         focusElementId,
+        stackIndex,
+        setStackIndex,
+        pushStack,
+        readStack,
         moveSentence,
         mergeSentences,
         splitSentence,

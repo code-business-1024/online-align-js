@@ -12,6 +12,7 @@ import {
   CloseOutlined,
   SearchOutlined,
   UploadOutlined,
+  SyncOutlined,
 } from '@ant-design/icons';
 
 import './index.less';
@@ -24,15 +25,31 @@ const ToolBar = () => {
     splitSentence,
     mergeSentences,
     moveSentence,
+    stackIndex,
+    readStack,
   } = useSentences();
-
   return (
     <div className="root-container">
-      <Button type="text" icon={<StepBackwardOutlined />}>
+      <Button
+        type="text"
+        icon={<StepBackwardOutlined />}
+        onClick={() => {
+          readStack(stackIndex - 1);
+        }}
+      >
         回退
       </Button>
-      <Button type="text" icon={<StepForwardOutlined />}>
+      <Button
+        type="text"
+        icon={<StepForwardOutlined />}
+        onClick={() => {
+          readStack(stackIndex + 1);
+        }}
+      >
         前进
+      </Button>
+      <Button type="text" icon={<SyncOutlined />}>
+        缓存
       </Button>
       <Divider type="vertical" />
       <Button

@@ -12,7 +12,7 @@ import { formatResponseObjArray, mergeObjArray } from '../../sentence-util';
 import defaultSentencesData from '../../sentence-data.json';
 
 const AlignTable = () => {
-  const { sentences, setPartValue, setSentenceValue } = useSentences();
+  const { sentences, setPartValue, setSentenceValue, readStack } = useSentences();
 
   useListenerFocusElement();
 
@@ -34,6 +34,11 @@ const AlignTable = () => {
       // window.removeEventListener('keyup');
     };
   }, [,]);
+
+  useEffect(() => {
+    console.log('首次加载');
+    readStack();
+  }, []);
 
   return (
     <>
