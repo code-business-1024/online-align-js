@@ -47,22 +47,23 @@ export const SentenceProvider = ({ children }) => {
 
   const updataFiles = (data) => {
     setFiles(data);
+    pushStack(sentences, data);
   };
 
   // 写入缓存
-  const pushStack = (data) => {
-    console.table(data);
-    let currentStack = JSON.parse(localStorage.getItem('sentenceDataStack')) || [];
-    console.log('🚀 ~ file: sentence-hooks.js ~ line 36 ~ pushStack ~ currentStack', currentStack);
-    currentStack.push(data);
+  const pushStack = (sentencesData, filesData) => {
+    let currentStack = JSON.parse(localStorage.getItem('dataStack')) || [];
+    currentStack.push({
+      sentences: sentencesData,
+      files: filesData,
+    });
     console.log(currentStack);
-    localStorage.setItem('sentenceDataStack', JSON.stringify(currentStack));
+    localStorage.setItem('dataStack', JSON.stringify(currentStack));
   };
 
   // 读取缓存
   const readStack = (index) => {
-    let currentStack = JSON.parse(localStorage.getItem('sentenceDataStack')) || [];
-    console.log('🚀 ~ file: sentence-hooks.js ~ line 44 ~ readStack ~ index', index);
+    let currentStack = JSON.parse(localStorage.getItem('dataStack')) || [];
     if (index < 0) {
       notification.warning({
         message: '回退失败!',
@@ -79,17 +80,21 @@ export const SentenceProvider = ({ children }) => {
       });
       return;
     }
-    // console.log('🚀 ~ file: sentence-hooks.js ~ line 45 ~ readStack ~ currentStack', currentStack);
-    let currentSentences = currentStack[index != undefined ? index : currentStack.length - 1];
+    let currentStackItem = currentStack[index != undefined ? index : currentStack.length - 1];
     setStackIndex(index != undefined ? index : currentStack.length - 1);
-    // console.table(currentSentences);
-    setSentences(currentSentences);
+    console.log(currentStackItem);
+    setSentences(currentStackItem?.sentences || []);
+    setFiles(currentStackItem?.files || defaultFilesData);
+    setTimeout(() => {
+      console.log(files);
+      console.log(sentences);
+    }, 0);
   };
 
   // 清除缓存
   const clearStack = () => {
     setSentences([]);
-    localStorage.removeItem('sentenceDataStack');
+    localStorage.removeItem('dataStack');
   };
 
   /**
@@ -153,7 +158,7 @@ export const SentenceProvider = ({ children }) => {
     }
     // console.log(`最终合并Sentence数据 ${JSON.stringify(finalData)}`);
     setSentences(finalData);
-    pushStack(finalData);
+    pushStack(finalData, files);
   };
 
   /**
@@ -175,7 +180,7 @@ export const SentenceProvider = ({ children }) => {
       finalData.push(tempObj);
     });
     setSentences(finalData);
-    pushStack(finalData);
+    pushStack(finalData, files);
   };
 
   // 上移 下移

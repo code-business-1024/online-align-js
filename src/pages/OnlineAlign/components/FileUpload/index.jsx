@@ -20,7 +20,12 @@ const FileInput = ({ className, xfile, doUploadSuccess = (f) => f, doUpdateFile 
       });
       setLangDictList(res.data);
     })();
+    setCurrentLang(xfile.language);
   }, []);
+
+  useEffect(() => {
+    console.log('🚀 ~ file: index.jsx ~ line 26 ~ useEffect ~ xfile', xfile);
+  }, [xfile]);
 
   return (
     <>
@@ -29,11 +34,13 @@ const FileInput = ({ className, xfile, doUploadSuccess = (f) => f, doUpdateFile 
           <span style={{ marginRight: 12 }}>检测语言: </span>
           <div>
             <Select
-              defaultValue={xfile?.language || 'auto'}
+              defaultValue={currentLang || 'auto'}
+              value={xfile.language}
               style={{ width: 120 }}
               onChange={(value) => {
                 console.log(xfile);
                 xfile.language = value;
+                setCurrentLang(value);
                 doUpdateFile(xfile);
               }}
             >
@@ -47,7 +54,7 @@ const FileInput = ({ className, xfile, doUploadSuccess = (f) => f, doUpdateFile 
         </div>
         <div className="fileUpload-box">
           <div>
-            <Input value={fileName} style={{ width: 200 }} placeholder="文件名" />
+            <Input value={xfile.fileName} style={{ width: 200 }} placeholder="文件名" />
           </div>
           <div>
             <Upload

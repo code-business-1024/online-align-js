@@ -13,8 +13,7 @@ import defaultSentencesData from '../../sentence-data.json';
 import { template } from 'lodash';
 
 const AlignTable = () => {
-  const { sentences, setPartValue, setSentenceValue, readStack, files, updataFiles } =
-    useSentences();
+  const { sentences, setPartValue, readStack, files, updataFiles } = useSentences();
 
   useListenerFocusElement();
 
@@ -41,6 +40,7 @@ const AlignTable = () => {
     console.log('首次加载');
     readStack();
     console.log(files);
+    console.log(sentences);
   }, []);
 
   return (
@@ -97,6 +97,7 @@ const AlignTable = () => {
                 let tempFile = files;
                 tempFile[0] = data;
                 updataFiles(tempFile);
+                console.log(tempFile);
               }}
             />
             <FileUpload
