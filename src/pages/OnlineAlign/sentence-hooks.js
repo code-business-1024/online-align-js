@@ -60,6 +60,7 @@ export const SentenceProvider = ({ children }) => {
   const updataFiles = (data) => {
     setFiles(data);
     pushStack(sentences, data);
+    setStackIndex(stackIndex + 1);
   };
 
   // 写入缓存
@@ -106,7 +107,9 @@ export const SentenceProvider = ({ children }) => {
   // 清除缓存
   const clearStack = () => {
     setSentences([]);
+    setFiles(defaultFilesData);
     localStorage.removeItem('dataStack');
+    setStackIndex(0);
   };
 
   /**
@@ -171,6 +174,7 @@ export const SentenceProvider = ({ children }) => {
     // console.log(`最终合并Sentence数据 ${JSON.stringify(finalData)}`);
     setSentences(finalData);
     pushStack(finalData, files);
+    setStackIndex(stackIndex + 1);
   };
 
   /**
@@ -193,6 +197,7 @@ export const SentenceProvider = ({ children }) => {
     });
     setSentences(finalData);
     pushStack(finalData, files);
+    setStackIndex(stackIndex + 1);
   };
 
   // 上移 下移
