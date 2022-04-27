@@ -10,9 +10,11 @@ import SentenceSheckbox from '../SentenceCheckbox';
 import './index.less';
 import { formatResponseObjArray, mergeObjArray } from '../../sentence-util';
 import defaultSentencesData from '../../sentence-data.json';
+import { template } from 'lodash';
 
 const AlignTable = () => {
-  const { sentences, setPartValue, setSentenceValue, readStack } = useSentences();
+  const { sentences, setPartValue, setSentenceValue, readStack, files, updataFiles } =
+    useSentences();
 
   useListenerFocusElement();
 
@@ -38,6 +40,7 @@ const AlignTable = () => {
   useEffect(() => {
     console.log('首次加载');
     readStack();
+    console.log(files);
   }, []);
 
   return (
@@ -86,15 +89,27 @@ const AlignTable = () => {
             <FileUpload
               className="left-upload"
               key="value1"
+              xfile={files[0]}
               doUploadSuccess={(data) => {
                 setPartValue('value1', data);
+              }}
+              doUpdateFile={(data) => {
+                let tempFile = files;
+                tempFile[0] = data;
+                updataFiles(tempFile);
               }}
             />
             <FileUpload
               className="right-upload"
               key="value2"
+              xfile={files[1]}
               doUploadSuccess={(data) => {
                 setPartValue('value2', data);
+              }}
+              doUpdateFile={(data) => {
+                let tempFile = files;
+                tempFile[1] = data;
+                updataFiles(tempFile);
               }}
             />
           </div>,

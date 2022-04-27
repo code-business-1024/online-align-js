@@ -8,6 +8,19 @@ import {
 import useListenerKey from './custom-hooks';
 import { notification } from 'antd';
 
+const defaultFilesData = [
+  {
+    language: 'auto',
+    type: 'src',
+    fileName: '',
+  },
+  {
+    language: 'auto',
+    type: 'tgt',
+    fileName: '',
+  },
+];
+
 // 创建 SentenceContext 上下文
 const SentenceContext = createContext([]);
 
@@ -19,16 +32,22 @@ export const SentenceProvider = ({ children }) => {
   // 当用户按住shift可以在以下变量中存放多个数据
   const [opRecords, setOpRecords] = useState([]);
 
-  const [sentences, setSentences] = useState(defaultSentenceData);
+  const [sentences, setSentences] = useState([]);
+
+  const [files, setFiles] = useState(defaultFilesData);
 
   const [checkboxMark, setCheckboxMark] = useState(true);
 
   const [focusElementId, setFocusElementId] = useState();
 
-  const [sentenceDataStack, setSentenceDataStack] = useState([]);
+  const [dataStack, setDataStack] = useState([]);
 
   // 还需要维护这个值的变化
   const [stackIndex, setStackIndex] = useState(0);
+
+  const updataFiles = (data) => {
+    setFiles(data);
+  };
 
   // 写入缓存
   const pushStack = (data) => {
@@ -406,6 +425,10 @@ export const SentenceProvider = ({ children }) => {
         checkboxMark,
         focusElementId,
         stackIndex,
+        dataStack,
+        files,
+        updataFiles,
+        setDataStack,
         exchangeSentences,
         setStackIndex,
         pushStack,

@@ -7,7 +7,7 @@ import './index.less';
 
 const { Option } = Select;
 
-const FileInput = ({ className, doUploadSuccess = (f) => f }) => {
+const FileInput = ({ className, xfile, doUploadSuccess = (f) => f, doUpdateFile = (f) => f }) => {
   const [langDictList, setLangDictList] = useState(defaultLangDict);
   const [currentLang, setCurrentLang] = useState('auto');
   const [fileName, setFileName] = useState('');
@@ -29,10 +29,12 @@ const FileInput = ({ className, doUploadSuccess = (f) => f }) => {
           <span style={{ marginRight: 12 }}>检测语言: </span>
           <div>
             <Select
-              defaultValue={currentLang}
+              defaultValue={xfile?.language || 'auto'}
               style={{ width: 120 }}
               onChange={(value) => {
-                setCurrentLang(value);
+                console.log(xfile);
+                xfile.language = value;
+                doUpdateFile(xfile);
               }}
             >
               {langDictList.map((item) => (
@@ -58,9 +60,11 @@ const FileInput = ({ className, doUploadSuccess = (f) => f }) => {
                   doUploadSuccess(data);
                 }
               }}
-              data={{ language: currentLang }}
+              data={{ language: xfile?.language || 'auto' }}
               beforeUpload={(file) => {
                 setFileName(file.name);
+                xfile.fileName = file.name;
+                doUpdateFile(xfile);
               }}
               maxCount={1}
             >
