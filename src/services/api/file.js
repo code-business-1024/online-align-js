@@ -10,3 +10,10 @@ export async function uploadAndParser(file, language) {
     data: formdata,
   });
 }
+
+export async function exportTmx(data) {
+  return request('/api/web/file/exportTmx', {
+    method: 'POST',
+    data: data,
+  });
+}

@@ -29,10 +29,18 @@ const ToolBar = () => {
     stackIndex,
     readStack,
     clearStack,
+    doExportTmx,
   } = useSentences();
   return (
     <div className="root-container">
-      <Button className="toolbar-button" type="primary" icon={<SyncOutlined />}>
+      <Button
+        className="toolbar-button"
+        type="primary"
+        icon={<SyncOutlined />}
+        onClick={() => {
+          doExportTmx();
+        }}
+      >
         导出
       </Button>
       <Button

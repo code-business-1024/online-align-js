@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import defaultSentenceData from './sentence-data.json';
+import { exportTmx } from '@/services/api/file';
 import {
   formatResponseObjArray,
   mergeObjArray,
@@ -44,6 +45,17 @@ export const SentenceProvider = ({ children }) => {
 
   // 还需要维护这个值的变化
   const [stackIndex, setStackIndex] = useState(0);
+
+  const doExportTmx = () => {
+    (async () => {
+      const res = await exportTmx({
+        files: files,
+        sentences: sentences,
+      });
+      console.log(res);
+      window.open(res.data);
+    })();
+  };
 
   const updataFiles = (data) => {
     setFiles(data);
@@ -451,6 +463,7 @@ export const SentenceProvider = ({ children }) => {
         setSentenceValue,
         deleteSentenceByKeyAndMark,
         insertSentenceByKey,
+        doExportTmx,
       }}
     >
       {children}
