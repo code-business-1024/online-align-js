@@ -19,50 +19,14 @@ export default [
     ],
   },
   {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
-  },
-  {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
-    component: './Admin',
-    routes: [
-      {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        icon: 'smile',
-        component: './Welcome',
-      },
-      {
-        component: './404',
-      },
-    ],
-  },
-  // {
-  //   name: 'list.table-list',
-  //   icon: 'table',
-  //   path: '/list',
-  //   component: './TableList',
-  // },
-  {
     name: 'tool.online-align',
     icon: 'table',
     path: '/align',
     component: './OnlineAlign',
   },
   {
-    name: 'learn.learn-demo',
-    icon: 'table',
-    path: '/learn',
-    component: './LearnDemo',
-  },
-  {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/align',
   },
   {
     component: './404',

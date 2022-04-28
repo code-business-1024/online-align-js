@@ -1,14 +1,14 @@
 const Settings = {
   navTheme: 'light',
-  primaryColor: '#1890ff',
   layout: 'top',
   contentWidth: 'Fixed',
   fixedHeader: false,
-  fixSiderbar: true,
-  pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  fixSiderbar: false,
   headerHeight: 48,
-  footerRender: false,
+  primaryColor: '#1890ff',
   splitMenus: false,
+  footerRender: false,
+  menuRender: false,
+  menuHeaderRender: false,
 };
 export default Settings;

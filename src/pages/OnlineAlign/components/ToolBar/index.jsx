@@ -12,6 +12,8 @@ import {
   CloseOutlined,
   SearchOutlined,
   UploadOutlined,
+  CloudSyncOutlined,
+  DownloadOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
 
@@ -36,7 +38,7 @@ const ToolBar = () => {
       <Button
         className="toolbar-button"
         type="primary"
-        icon={<SyncOutlined />}
+        icon={<DownloadOutlined />}
         onClick={() => {
           doExportTmx();
         }}
@@ -161,7 +163,7 @@ const ToolBar = () => {
       >
         删除
       </Button>
-      <Button className="toolbar-button" type="text" icon={<SyncOutlined />}>
+      <Button className="toolbar-button" type="text" icon={<CloudSyncOutlined />}>
         缓存
       </Button>
       <Button

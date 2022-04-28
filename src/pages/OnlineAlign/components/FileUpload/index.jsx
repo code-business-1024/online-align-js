@@ -34,7 +34,7 @@ const FileInput = ({ className, xfile, doUploadSuccess = (f) => f, doUpdateFile 
           <span style={{ marginRight: 12 }}>检测语言: </span>
           <div>
             <Select
-              defaultValue={currentLang || 'auto'}
+              defaultValue={currentLang || 'zh_CN'}
               value={xfile.language}
               style={{ width: 120 }}
               onChange={(value) => {
@@ -59,7 +59,7 @@ const FileInput = ({ className, xfile, doUploadSuccess = (f) => f, doUpdateFile 
           <div>
             <Upload
               showUploadList={false}
-              action="http://127.0.0.1:8080/web/file/uploadAndParser"
+              action="http://42.192.222.62:15001/web/file/uploadAndParser"
               onChange={(file) => {
                 console.log(file.file.status);
                 if (file.file.status == 'done') {
@@ -67,7 +67,7 @@ const FileInput = ({ className, xfile, doUploadSuccess = (f) => f, doUpdateFile 
                   doUploadSuccess(data);
                 }
               }}
-              data={{ language: xfile?.language || 'auto' }}
+              data={{ language: xfile?.language || 'en' }}
               beforeUpload={(file) => {
                 setFileName(file.name);
                 xfile.fileName = file.name;

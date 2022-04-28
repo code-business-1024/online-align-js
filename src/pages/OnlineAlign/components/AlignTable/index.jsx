@@ -84,6 +84,9 @@ const AlignTable = () => {
         rowKey="key"
         search={false}
         dateFormatter="string"
+        pagination={{
+          showSizeChanger: true,
+        }}
         toolBarRender={(rowKey) => [
           <div className="upload-group" key="1">
             <FileUpload

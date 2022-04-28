@@ -3,7 +3,6 @@ import { PageLoading } from '@ant-design/pro-layout';
 import { history, Link } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { info as info } from './services/api/user';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
 const isDev = process.env.NODE_ENV === 'development';
@@ -18,22 +17,8 @@ export const initialStateConfig = {
  * */
 
 export async function getInitialState() {
-  const fetchUserInfo = async () => {
-    try {
-      const msg = await info();
-      return msg.data;
-    } catch (error) {
-      history.push(loginPath);
-    }
-
-    return undefined;
-  }; // 如果不是登录页面，执行
-
   if (history.location.pathname !== loginPath) {
-    const currentUser = await fetchUserInfo();
     return {
-      fetchUserInfo,
-      currentUser,
       settings: defaultSettings,
     };
   }
@@ -56,7 +41,7 @@ export const layout = ({ initialState, setInitialState }) => {
       const { location } = history; // 如果没有登录，重定向到 login
 
       if (!initialState?.currentUser && location.pathname !== loginPath) {
-        history.push(loginPath);
+        history.push('/align');
       }
     },
     links: isDev

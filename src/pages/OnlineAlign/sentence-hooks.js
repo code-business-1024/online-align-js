@@ -11,12 +11,12 @@ import { notification } from 'antd';
 
 const defaultFilesData = [
   {
-    language: 'auto',
+    language: 'zh_CN',
     type: 'src',
     fileName: '',
   },
   {
-    language: 'auto',
+    language: 'en',
     type: 'tgt',
     fileName: '',
   },
