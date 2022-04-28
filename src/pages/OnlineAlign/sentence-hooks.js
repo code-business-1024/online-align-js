@@ -387,13 +387,12 @@ export const SentenceProvider = ({ children }) => {
         console.log(mergeContent);
       });
     let mergeObj = {
-      key:
-        Math.min.apply(
-          Math,
-          opRecords.map((item) => {
-            return item.key;
-          }),
-        ) + 1,
+      key: Math.min.apply(
+        Math,
+        opRecords.map((item) => {
+          return item.key;
+        }),
+      ),
       value: mergeContent,
     };
     console.log('🚀 ~ file: sentence-hooks.js ~ line 376 ~ mergeSentences ~ mergeObj', mergeObj);
