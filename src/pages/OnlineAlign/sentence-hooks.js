@@ -46,6 +46,9 @@ export const SentenceProvider = ({ children }) => {
   // 还需要维护这个值的变化
   const [stackIndex, setStackIndex] = useState(0);
 
+  // 选中模式 input & checkbox
+  const [selectModel, setSelectModel] = useState();
+
   const doExportTmx = () => {
     (async () => {
       const res = await exportTmx({
@@ -106,6 +109,7 @@ export const SentenceProvider = ({ children }) => {
 
   // 清除缓存
   const clearStack = () => {
+    setOpRecords([]);
     setSentences([]);
     setFiles(defaultFilesData);
     localStorage.removeItem('dataStack');
@@ -118,25 +122,31 @@ export const SentenceProvider = ({ children }) => {
    * @param {*} key
    * @param {*} sentence
    */
-  const setOpObj = (flag, mark, record) => {
-    console.log('🚀 ~ setOpObj ~~ flag:', flag, 'mark:', mark);
+  const setOpObj = (flag, mark, record, type) => {
     console.table(record);
     let finalOpRecord = [];
     if (mark) {
       setOpMark(mark);
-      console.log('🚀 ~ setOpObj ~~ mark:', mark, ' => opMark:', opMark);
     }
     if (flag) {
       // 新增
-      finalOpRecord = opRecords;
-      finalOpRecord.push(record);
+      if (type === 'checkbox') {
+        if (selectModel === type) {
+          finalOpRecord = opRecords.filter((item) => item.key !== record.key);
+        }
+        finalOpRecord.push(record);
+      } else if (type === 'input') {
+        finalOpRecord = new Array(record);
+      }
     } else {
       // 减少
       finalOpRecord = opRecords.filter((item) => item.key != record.key);
     }
     setOpRecords(finalOpRecord);
-    console.log('🚀 ~ setOpRecords ~~ finalOpRecord:', finalOpRecord, '=> opRecords:', opRecords);
-    console.table(finalOpRecord);
+    console.log(
+      '🚀 ~ file: sentence-hooks.js ~ line 136 ~ setOpObj ~ finalOpRecord',
+      finalOpRecord,
+    );
   };
 
   /**
@@ -198,6 +208,7 @@ export const SentenceProvider = ({ children }) => {
     setSentences(finalData);
     pushStack(finalData, files);
     setStackIndex(stackIndex + 1);
+    clearOpObj();
   };
 
   // 上移 下移
@@ -367,15 +378,25 @@ export const SentenceProvider = ({ children }) => {
     }
     let opPartData = [];
     let mergeContent = '';
-    opRecords.map((item) => {
-      mergeContent = mergeContent + item[opMark];
-      console.log(mergeContent);
-    });
+    opRecords
+      .sort((a, b) => {
+        return a.key - b.key;
+      })
+      .map((item) => {
+        mergeContent = mergeContent + item[opMark];
+        console.log(mergeContent);
+      });
     let mergeObj = {
-      key: Math.min(...Object.keys(opRecords)) + 1,
+      key:
+        Math.min.apply(
+          Math,
+          opRecords.map((item) => {
+            return item.key;
+          }),
+        ) + 1,
       value: mergeContent,
     };
-    console.table(mergeObj);
+    console.log('🚀 ~ file: sentence-hooks.js ~ line 376 ~ mergeSentences ~ mergeObj', mergeObj);
     sentences.map((item) => {
       let tempOpRecord = opRecords.filter((opItem) => opItem.key === item.key)[0] || {};
       console.log(
@@ -469,6 +490,7 @@ export const SentenceProvider = ({ children }) => {
         deleteSentenceByKeyAndMark,
         insertSentenceByKey,
         doExportTmx,
+        setSelectModel,
       }}
     >
       {children}

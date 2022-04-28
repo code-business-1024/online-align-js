@@ -4,7 +4,7 @@ import { Checkbox } from 'antd';
 import './index.less';
 
 const SentenceSheckbox = ({ record, mark }) => {
-  const { setOpObj, checkboxMark, setCheckboxMark } = useSentences();
+  const { setOpObj, checkboxMark, setCheckboxMark, setSelectModel } = useSentences();
   const [checkState, setCheckState] = useState(false);
 
   // 处理选中框问题
@@ -23,7 +23,8 @@ const SentenceSheckbox = ({ record, mark }) => {
           // 更新当前活动列
           setCheckboxMark(true);
           setCheckState(!checkState);
-          setOpObj(e.target.checked, mark, record);
+          setOpObj(e.target.checked, mark, record, 'checkbox');
+          setSelectModel('checkbox');
         }}
       />
     </>

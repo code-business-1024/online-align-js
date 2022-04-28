@@ -8,7 +8,8 @@ const SentenceInput = ({ record, mark }) => {
   const [lineRecord, setLineRecord] = useState(record);
   const [currentMark, setCurrentMark] = useState(mark);
   const [borderedMark, setBorderedMark] = useState(false);
-  const { setSentenceValue, setFocusElementId, setOpObj, clearOpObj } = useSentences();
+  const { setSentenceValue, setFocusElementId, setOpObj, clearOpObj, setSelectModel } =
+    useSentences();
 
   const getPositionForTextArea = (e) => {
     console.log(e);
@@ -45,14 +46,16 @@ const SentenceInput = ({ record, mark }) => {
         onChange={(e) => setValue(e.target.value)}
         onBlur={(e) => {
           setBorderedMark(false);
-          e.target.value != lineRecord[currentMark] &&
+          if (e.target.value != lineRecord[currentMark]) {
             setSentenceValue(currentMark, lineRecord.key, value);
+          }
         }}
         onFocus={(e) => {
+          clearOpObj();
           let elementId = 'textarea-' + currentMark + '-' + lineRecord.key;
           setFocusElementId(elementId);
-          clearOpObj();
-          setOpObj(true, currentMark, lineRecord);
+          setSelectModel('input');
+          setOpObj(true, currentMark, lineRecord, 'input');
           // console.table(e);
           setBorderedMark(true);
           // setOpObj(currentMark, lineRecord);
